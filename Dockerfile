@@ -4,8 +4,8 @@ WORKDIR /app
 
 # Instala las herramientas de desarrollo y el controlador ODBC para SQL Server
 RUN apt-get update && \
-    apt-get install -y curl apt-transport-https gnupg gcc g++ make && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    apt-get install -y curl apt-transport-https gnupg && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y msodbcsql17 && \
