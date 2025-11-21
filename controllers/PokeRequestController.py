@@ -1,5 +1,6 @@
 import json 
 import logging
+import os
 
 from fastapi import HTTPException
 from models.PokeRequest import PokemonRequest
@@ -75,3 +76,24 @@ async def get_all_request() -> dict:
         id = record['ReportId']
         record['url'] = f"{record['url']}?{blob.generate_sas(id)}"
     return result_dict
+
+
+async def delete_pokemon_request( pokemon_request: PokemonRequest) -> dict:
+    try:
+        query = " exec pokequeue.delete_poke_request ? "
+        params = ( pokemon_request.id,  )
+        result = await execute_query_json( query , params, True )
+        result_dict = json.loads(result)
+        if (result_dict[0]["completed"] == 0):
+            # Id was not found in the database
+            logger.error(f"Error deleting report request: ID {pokemon_request.id} not found")
+            raise HTTPException( status_code=404 , detail="Request ID not found")
+        # Insert message on deletedreports queue for background processing
+        queue_message = json.dumps([{"id": pokemon_request.id}])
+        await AQueue(os.getenv('DELETED_QUEUE_NAME')).insert_message_on_queue( queue_message  )
+        return result_dict[0]
+    except Exception as e:
+        logger.error( f"Error deleting report request {e}" )
+        if type(e) == HTTPException and e.status_code == 404:
+            raise HTTPException( status_code=404 , detail="Request ID not found")
+        raise HTTPException( status_code=500 , detail="Internal Server Error")
