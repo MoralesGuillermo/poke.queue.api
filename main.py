@@ -44,8 +44,8 @@ async def update_request(pokemon_request: PokemonRequest):
     return await update_pokemon_request( pokemon_request )
 
 @app.delete("/api/request/{id}")
-async def delete_request(pokemon_request: PokemonRequest):
-    return await delete_pokemon_request( pokemon_request )
+async def delete_request():
+    return await delete_pokemon_request( id )
 
 
 

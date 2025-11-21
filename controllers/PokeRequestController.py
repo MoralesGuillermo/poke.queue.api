@@ -78,15 +78,15 @@ async def get_all_request() -> dict:
     return result_dict
 
 
-async def delete_pokemon_request( pokemon_request: PokemonRequest) -> dict:
+async def delete_pokemon_request( id: int) -> dict:
     try:
         query = " exec pokequeue.delete_poke_request ? "
-        params = ( pokemon_request.id,  )
+        params = ( id,  )
         result = await execute_query_json( query , params, True )
         result_dict = json.loads(result)
         if (not result_dict):
             # Id was not found in the database
-            logger.error(f"Error deleting report request: ID {pokemon_request.id} not found")
+            logger.error(f"Error deleting report request: ID {id} not found")
             raise HTTPException( status_code=404 , detail="Request ID not found")
         # Insert message on deletedreports queue for background processing
         await AQueue(os.getenv('DELETED_QUEUE_NAME')).insert_message_on_queue( result  )
