@@ -10,7 +10,7 @@ class AQueue:
         self.azure_sak = os.getenv('AZURE_SAK')
         if not queue_name:
             # Default queue
-            queue_name = os.getenv('AZURE_QUEUE_NAME')
+            queue_name = os.getenv('QUEUE_NAME')
         self.queue_name = queue_name
         self.queue_client = QueueClient.from_connection_string(self.azure_sak, self.queue_name)
         self.queue_client.message_decode_policy = BinaryBase64DecodePolicy()
