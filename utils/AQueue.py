@@ -6,8 +6,11 @@ load_dotenv()
 
 class AQueue:
     # Inject the queue name
-    def __init__(self, queue_name: str = os.getenv('AZURE_QUEUE_NAME')):
+    def __init__(self, queue_name: str):
         self.azure_sak = os.getenv('AZURE_SAK')
+        if not queue_name:
+            # Default queue
+            queue_name = os.getenv('AZURE_QUEUE_NAME')
         self.queue_name = queue_name
         self.queue_client = QueueClient.from_connection_string(self.azure_sak, self.queue_name)
         self.queue_client.message_decode_policy = BinaryBase64DecodePolicy()
