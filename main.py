@@ -24,7 +24,7 @@ async def root():
 
 @app.get("/api/version")
 async def version():
-    return { "version":  "0.4.4" }
+    return { "version":  "0.4.5" }
 
 
 @app.get("/api/request/{id}")
@@ -44,7 +44,7 @@ async def update_request(pokemon_request: PokemonRequest):
     return await update_pokemon_request( pokemon_request )
 
 @app.delete("/api/request/{id}")
-async def delete_request():
+async def delete_request(id: int):
     return await delete_pokemon_request( id )
 
 
