@@ -6,7 +6,7 @@ load_dotenv()
 
 class AQueue:
     # Inject the queue name
-    def __init__(self, queue_name: str):
+    def __init__(self, queue_name: str = None):
         self.azure_sak = os.getenv('AZURE_SAK')
         if not queue_name:
             # Default queue
