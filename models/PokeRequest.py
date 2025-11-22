@@ -26,3 +26,8 @@ class PokemonRequest(BaseModel):
         description="Estado de la peticion",
         pattern="^(sent|completed|failed|inprogress)$"
     )
+
+    sample: Optional[int] = Field(
+        default=None,
+        desription="Pokemon quantity in the report"
+    )
